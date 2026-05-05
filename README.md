@@ -1,1 +1,1 @@
-`python -m fvck`
+`bin/start`
