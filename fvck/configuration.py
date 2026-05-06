@@ -22,6 +22,7 @@ import yaml
 from .settings import Settings, Language
 
 def load_config(path: str) -> None:
+
     with open(path, 'r', encoding='utf-8') as file:
         payload: Any = yaml.safe_load(file)
 

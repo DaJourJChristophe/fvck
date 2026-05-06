@@ -13,15 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 '''
-from os import makedirs
-from os.path import abspath
-
-from .fvck import Fvck
+from .run import launch
 
 def main() -> int:
-
-    build_dir: str = abspath('build')
-    makedirs(build_dir, exist_ok=True)
-
-    fvck: Fvck = Fvck()
-    return fvck.run(['main.py', 'example.c', 'foo', '123$67+0945'])
+    return launch()

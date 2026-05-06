@@ -18,12 +18,16 @@ from __future__ import annotations
 from os.path import abspath
 from pathlib import Path
 
-from .cache            import TranslationUnitCache
-from .compiler         import CompileOptions
-from .configuration    import load_config
-from .settings         import Language, Settings
-from .strategy         import CompilerStrategy
-from .utilities        import Utilities
+from argparse import Namespace
+
+from .cache         import TranslationUnitCache
+from .compiler      import CompileOptions
+from .configuration import load_config
+from .settings      import Language, Settings
+from .strategy      import CompilerStrategy
+from .utilities     import Utilities
+
+from os import makedirs
 
 class Fvck:
 
@@ -31,9 +35,17 @@ class Fvck:
         self.__workdir  : str = '.'
         self.__tu_cache : TranslationUnitCache = TranslationUnitCache()
 
-        load_config(abspath('config/settings.yaml'))
+    def run(self, args: Namespace) -> int:
 
-    def run(self, args: list[str]) -> int:
+        fvckrc_filepath: str = args.config
+        build_dir: str = args.build
+
+        load_config(abspath(fvckrc_filepath))
+
+        build_dir: str = abspath(build_dir)
+        makedirs(build_dir, exist_ok=True)
+
+        return 0
 
         for index in range(1, len(args)):
 
