@@ -1,18 +1,24 @@
-'''
-Copyright (C) 2026 Da'Jour J. Christophe. All rights reserved.
+"""
+fvck.file
 
-Licensed under the Apache License, Version 2.0 (the 'License');
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+Minimal file metadata wrapper used for comparing file timestamps and properties.
 
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an 'AS IS' BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-'''
+This class is not currently used by the main build graph, but remains a useful helper
+for future enhancements (e.g., incremental rebuild heuristics or diagnostics).
+"""
+# Copyright (C) 2026 Da'Jour J. Christophe. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the 'License');
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an 'AS IS' BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 from __future__ import annotations
 
 from os   import stat, stat_result
@@ -21,6 +27,15 @@ from time import ctime
 import stat as stat_module
 
 class File:
+    """
+    File metadata snapshot.
+
+    Instances store raw timestamps (float seconds) and expose human-readable properties
+    via `ctime` for debugging/logging.
+
+    Ordering:
+        `File` implements `<` and `>` based on `modified_ts`.
+    """
 
     def __init__(
         self,
@@ -44,6 +59,7 @@ class File:
 
     @staticmethod
     def read_file_metadata(path: str) -> 'File':
+        """Read `os.stat` metadata for `path` and return a `File` snapshot."""
         st: stat_result = stat(path)
 
         if hasattr(st, 'st_birthtime'):

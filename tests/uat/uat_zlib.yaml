@@ -1,0 +1,47 @@
+version: 1
+
+languages:
+  C:
+    program_path: gcc
+    parameters:
+      - -c
+      - -O2
+      - -Wall
+      - -Wextra
+      - -Werror
+      - -Itmp/zlib
+    command:
+      argv:
+        - "{program}"
+        - { var: "parameters", splice: true }
+        - -MMD
+        - -MF
+        - "{depfile}"
+        - -o
+        - "{output}"
+        - "{input}"
+    outputs:
+      .c: .o
+
+targets:
+  - name: zlib
+    sources:
+      - tmp/zlib/*.c
+  - name: uat_main
+    sources:
+      - tests/uat/zlib_main.c
+
+link_targets:
+  - name: zlib_app
+    program_path: gcc
+    parameters: []
+    output: zlib_app.exe
+    from_targets: [zlib, uat_main]
+    command:
+      argv:
+        - "{program}"
+        - { var: "parameters", splice: true }
+        - { var: "objects", splice: true }
+        - -o
+        - "{output}"
+

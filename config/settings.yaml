@@ -1,7 +1,8 @@
-languages:
-  C:
-    program_path: gcc
+version: 1
 
+languages:
+  Cpp:
+    program_path: g++
     parameters:
       - -c
       - -ggdb3
@@ -9,6 +10,68 @@ languages:
       - -Wall
       - -Wextra
       - -Werror
-
+    # Required: defines exactly how argv is constructed.
+    # Variables: {program}, {input}, {output}, {depfile}
+    # List vars: {parameters} (splice), etc.
+    #
+    # For correct dependency-based caching, emit depfiles:
+    #   -MMD -MF {depfile}
+    command:
+      argv:
+        - "{program}"
+        - { var: "parameters", splice: true }
+        - -MMD
+        - -MF
+        - "{depfile}"
+        - -o
+        - "{output}"
+        - "{input}"
     outputs:
-      .c: .o
+      .cc: .o
+      .cpp: .o
+
+targets:
+  - name: example_lib
+    sources:
+      - examples/*.cpp
+
+link_targets:
+  - name: app
+    program_path: g++
+    parameters: []
+    output: app.exe
+    from_targets: [example_lib]
+    command:
+      argv:
+        - "{program}"
+        - { var: "parameters", splice: true }
+        - { var: "objects", splice: true }
+        - -o
+        - "{output}"
+
+# Optional: setuptools convenience wrapper (loosely coupled).
+# You can still run setuptools independently; this just runs it for you when configured.
+#
+# python_bindings:
+#   - name: my_ext
+#     project_root: .
+#     build_subdir: .python_bindings
+#     from_targets: [example_lib]
+#     # Explicit inputs for caching. When these don't change, the step is skipped.
+#     inputs:
+#       - setup.py
+#       - pyproject.toml
+#       - src/**/*.c
+#       - src/**/*.h
+#     parameters: []
+#     # Variables: {python}/{program}, {project_root}, {build_dir}, {objects}, {parameters}
+#     # Tip: pass setuptools build dirs into `{build_dir}` so artifacts stay under `build/`.
+#     command:
+#       argv:
+#         - "{python}"
+#         - -m
+#         - pip
+#         - wheel
+#         - .
+#         - -w
+#         - "{build_dir}/wheels"

@@ -1,3 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fvck"
+version = "0.1.0"
+description = "A configurable build wrapper with TU caching and optional setuptools convenience steps."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "Apache-2.0"}
+authors = [{name = "Da'Jour J. Christophe"}]
+dependencies = ["PyYAML>=6.0"]
+
+[project.scripts]
+fvck = "fvck.run:main"
+
+[tool.setuptools]
+packages = {find = {include = ["fvck*"]}}
+
 [tool.pyright]
 pythonVersion = "3.13"
 typeCheckingMode = "basic"
@@ -5,3 +25,17 @@ executionEnvironments = [
   { root = ".", extraPaths = ["."] }
 ]
 include = ["fvck", "bin"]
+
+[tool.coverage.run]
+branch = true
+source = ["fvck"]
+parallel = false
+
+[tool.coverage.report]
+skip_empty = true
+show_missing = true
+exclude_lines = [
+  "pragma: no cover",
+  "if __name__ == .__main__.:",
+  "raise SystemExit",
+]
