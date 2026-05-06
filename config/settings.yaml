@@ -1,0 +1,14 @@
+languages:
+  C:
+    program_path: gcc
+
+    parameters:
+      - -c
+      - -ggdb3
+      - -O0
+      - -Wall
+      - -Wextra
+      - -Werror
+
+    outputs:
+      .c: .o

@@ -1,2 +1,8 @@
+*.pyc
+*.pyd
+
 __pycache__/
+
+build/
 env/
+tmp/

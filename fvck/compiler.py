@@ -13,15 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 '''
-from os import makedirs
-from os.path import abspath
+from __future__ import annotations
 
-from .fvck import Fvck
+class CompileOptions:
 
-def main() -> int:
+    target_filepath: str = ''
+    target_fileext : str = ''
+    output_filepath: str = ''
 
-    build_dir: str = abspath('build')
-    makedirs(build_dir, exist_ok=True)
+    def __init__(self, target_filepath: str = '',
+                       target_fileext : str = '',
+                       output_filepath: str = '') -> None:
 
-    fvck: Fvck = Fvck()
-    return fvck.run(['main.py', 'example.c', 'foo', '123$67+0945'])
+        self.target_filepath = target_filepath
+        self.target_fileext  = target_fileext
+        self.output_filepath = output_filepath
